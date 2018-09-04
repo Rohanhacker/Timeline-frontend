@@ -1,0 +1,17 @@
+{
+  "prettier.trailingComma": "es5",
+	"prettier.bracketSpacing": true,
+	"prettier.jsxBracketSameLine": true,
+	"prettier.parser": "babylon",
+	"prettier.semi": false,
+	"editor.formatOnSave": true,
+	"files.exclude": {
+		"**/node_modules": true,
+		"dist": true,
+		"coverage": true,
+		"log": true
+	},
+	"flow.useNPMPackagedFlow": true,
+	"javascript.validate.enable": false,
+	"editor.tabSize": 2
+}

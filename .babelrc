@@ -9,11 +9,20 @@
         },
         "loose": true,
         "modules": false,
+        "include": ["transform-es2015-arrow-functions", "es6.map"],
+        "exclude": ["transform-regenerator", "es6.set"]
       }
     ]
   ],
   "plugins": [
     "react-hot-loader/babel",
-    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+    "transform-class-properties",
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "style": true
+      }
+    ]
   ]
 }

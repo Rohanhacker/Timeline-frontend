@@ -1,11 +1,11 @@
-const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 
 module.exports = {
   entry: { main: "./src/index.jsx" },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: '[name].[hash].js',
+    filename: "[name].[hash].js",
     publicPath: "/",
   },
   module: {
@@ -14,17 +14,32 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
-      }
-    ]
+          loader: "babel-loader",
+        },
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: "style-loader", // creates style nodes from JS strings
+          },
+          {
+            loader: "css-loader", // translates CSS into CommonJS
+          },
+          {
+            loader: "less-loader", // compiles Less to CSS
+            options: { javascriptEnabled: true },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
       hash: true,
-      template: './src/index.html',
-      filename: 'index.html'
+      template: "./src/index.html",
+      filename: "index.html",
     }),
   ],
   resolve: {
@@ -40,5 +55,5 @@ module.exports = {
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
-  }
-};
+  },
+}
