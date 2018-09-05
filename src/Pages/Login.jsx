@@ -34,7 +34,7 @@ const LoginForm = Form.create()(props => {
             className="login-form-button">
             Submit
           </LoginBtn>
-          Or <a href="">register now!</a>
+          Demo User id's: 1, 2
         </FormItem>
       </Form>
     </div>
