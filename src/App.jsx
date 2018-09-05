@@ -24,11 +24,20 @@ class App extends PureComponent {
       {
         user,
       },
-      () => this.setUser(user)
+      () => {
+        localStorage.setItem("user", JSON.stringify(user))
+      }
     )
   }
   onLogout = () => {
-    console.log("s")
+    this.setState(
+      {
+        user: null,
+      },
+      () => {
+        localStorage.removeItem("user")
+      }
+    )
   }
   render() {
     return (

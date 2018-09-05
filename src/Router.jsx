@@ -10,13 +10,29 @@ export default class Router extends Component {
     }
     return <Login onLogin={onLogin} />
   }
+  renderTimeline = ({ match }) => {
+    const { user, onLogout } = this.props
+    if (!this.props.user) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/",
+          }}
+        />
+      )
+    }
+    return (
+      <Timeline onLogout={onLogout} friendId={match.params.id} user={user} />
+    )
+  }
   render() {
-    const { onLogin, user } = this.props
+    const { onLogout, onLogin, user } = this.props
     return (
       <div>
         <BrowserRouter>
           <Switch>
-            <Route exact path="/" render={() => this.renderRoot()} />
+            <Route exact path="/" render={this.renderRoot} />
+            <Route exact path="/:id" render={this.renderTimeline} />
           </Switch>
         </BrowserRouter>
       </div>

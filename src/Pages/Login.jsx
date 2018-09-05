@@ -1,30 +1,14 @@
 import React, { Component } from "react"
 import { Row, Col, Form, Icon, Input, Button, message } from "antd"
 import styled from "styled-components"
-import axios from "axios"
-
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  background-image: linear-gradient(to right, #f2709c, #ff9472);
-  display: flex;
-  font-family: Helvetica;
-`
-
-const FormContainer = styled.div`
-  width: 224px;
-  margin: auto;
-  background: white;
-  border-radius: 4px;
-`
-
-const StyledHeading = styled.h1`
-  color: rgb(252, 139, 125);
-`
-
-const LoginBtn = styled(Button)`
-  width: 100%;
-`
+import { getUser } from "../shared/api"
+import { pick } from "../shared/helpers"
+import {
+  OrangeHeading,
+  FormContainer,
+  LoginBtn,
+  FlexContainer,
+} from "../shared/StyledElements"
 
 const FormItem = Form.Item
 
@@ -36,7 +20,7 @@ const LoginForm = Form.create()(props => {
       style={{
         padding: 16,
       }}>
-      <StyledHeading>Login</StyledHeading>
+      <OrangeHeading>Login</OrangeHeading>
       <Form onSubmit={e => handleSubmit(e, form)} className="login-form">
         <FormItem>
           {getFieldDecorator("userId", {
@@ -63,7 +47,7 @@ export default class Login extends Component {
     form.validateFields(async (err, value) => {
       if (!err) {
         try {
-          const resp = await axios.get(`users/${value.userId}`)
+          const resp = await getUser(value.userId)
           const user = pick(resp.data, ["id", "name"])
           this.props.onLogin(user)
         } catch (e) {
@@ -76,17 +60,11 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <Container>
+      <FlexContainer>
         <FormContainer>
           <LoginForm handleSubmit={this.handleLogin} />
         </FormContainer>
-      </Container>
+      </FlexContainer>
     )
   }
-}
-
-function pick(obj, keys) {
-  return keys
-    .map(k => (k in obj ? { [k]: obj[k] } : {}))
-    .reduce((res, o) => Object.assign(res, o), {})
 }
