@@ -25,3 +25,6 @@ Next, run the app
 
 App will start at port 3000:
 http://localhost:3000/
+
+## Backend
+https://github.com/Rohanhacker/Timeline-backend
