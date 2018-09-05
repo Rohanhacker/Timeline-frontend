@@ -1,5 +1,7 @@
 import moment from "moment"
 
+// if time difference is less than 1 minute show just now
+// otherwise show time in minutes/hours/days depending on time diff
 export const getFormattedDate = date => {
   date = moment(date)
   const today = moment()

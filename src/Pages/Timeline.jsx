@@ -43,6 +43,7 @@ export default class Timeline extends Component {
   }
   async componentDidMount() {
     const { user, friendId } = this.props
+    // rerender every minute
     this.timeout = setInterval(
       () =>
         this.setState({
@@ -51,6 +52,7 @@ export default class Timeline extends Component {
       1000
     )
     if (!user) return
+    // get initial posts
     try {
       const resp = await api.getUserPosts(friendId || user.id)
       const posts = resp.data
@@ -65,6 +67,7 @@ export default class Timeline extends Component {
   componentWillUnmount() {
     clearInterval(this.timeout)
   }
+  // send new post to server and add it to state
   sendPost = async () => {
     const { user, friendId } = this.props
     const { postText, posts } = this.state
@@ -85,6 +88,7 @@ export default class Timeline extends Component {
       message.error("Error posting")
     }
   }
+  // send new comment to server and add it to state
   sendComment = async (e, postId) => {
     const { user } = this.props
     let { commentText, posts } = this.state
@@ -113,6 +117,7 @@ export default class Timeline extends Component {
       message.error("Can not post comment")
     }
   }
+  // Submit on enter
   getEnterHandler = (onEnter, ...args) => {
     return function(e, ...newArgs) {
       if (!e.shiftKey && e.key === "Enter") {
@@ -143,7 +148,7 @@ export default class Timeline extends Component {
       posts,
     })
   }
-
+  // handle socket broadcast
   onReceived = data => {
     const { user } = this.props
     if (data.payload.user.id === user.id) return
