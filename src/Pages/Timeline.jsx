@@ -51,11 +51,16 @@ export default class Timeline extends Component {
       1000
     )
     if (!user) return
-    const resp = await api.getUserPosts(friendId || user.id)
-    const posts = resp.data
-    this.setState({
-      posts,
-    })
+    try {
+      const resp = await api.getUserPosts(friendId || user.id)
+      const posts = resp.data
+      this.setState({
+        posts,
+      })
+    } catch (e) {
+      console.error(e)
+      message.error("Error fetching profile")
+    }
   }
   componentWillUnmount() {
     clearInterval(this.timeout)
@@ -64,39 +69,49 @@ export default class Timeline extends Component {
     const { user, friendId } = this.props
     const { postText, posts } = this.state
     if (!postText) return
-    const resp = await api.postMsg({
-      message: this.state.postText,
-      user_id: user.id,
-      recipient_id: friendId || user.id,
-    })
-    const newPost = resp.data
-    this.setState({
-      postText: "",
-      posts: [newPost, ...posts],
-    })
+    try {
+      const resp = await api.postMsg({
+        message: this.state.postText,
+        user_id: user.id,
+        recipient_id: friendId || user.id,
+      })
+      const newPost = resp.data
+      this.setState({
+        postText: "",
+        posts: [newPost, ...posts],
+      })
+    } catch (e) {
+      console.error(e)
+      message.error("Error posting")
+    }
   }
   sendComment = async (e, postId) => {
     const { user } = this.props
     let { commentText, posts } = this.state
     if (!commentText[postId]) return
-    const commentPostIndex = posts.findIndex(elem => elem.id === postId)
-    const resp = await api.postComment({
-      message: commentText[postId],
-      user_id: user.id,
-      post_id: postId,
-    })
-    const commentPost = posts[commentPostIndex]
-    posts[commentPostIndex] = {
-      ...commentPost,
-      comments: [resp.data, ...commentPost.comments],
+    try {
+      const commentPostIndex = posts.findIndex(elem => elem.id === postId)
+      const resp = await api.postComment({
+        message: commentText[postId],
+        user_id: user.id,
+        post_id: postId,
+      })
+      const commentPost = posts[commentPostIndex]
+      posts[commentPostIndex] = {
+        ...commentPost,
+        comments: [resp.data, ...commentPost.comments],
+      }
+      this.setState({
+        commentText: {
+          ...commentText,
+          [postId]: "",
+        },
+        posts,
+      })
+    } catch (e) {
+      console.error(e)
+      message.error("Can not post comment")
     }
-    this.setState({
-      commentText: {
-        ...commentText,
-        [postId]: "",
-      },
-      posts,
-    })
   }
   getEnterHandler = (onEnter, ...args) => {
     return function(e, ...newArgs) {
