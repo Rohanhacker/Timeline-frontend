@@ -18,7 +18,11 @@ import {
 } from "../shared/StyledElements"
 import * as api from "../shared/api"
 
-const socketUrl = `ws:localhost:5000/cable`
+const env = process.env.APP_ENV
+const socketUrl =
+  env === "production"
+    ? "wss:fbrohan.herokuapp.com/cable"
+    : "ws:localhost:5000/cable"
 
 export default class Timeline extends Component {
   state = {
@@ -103,8 +107,36 @@ export default class Timeline extends Component {
       }
     }
   }
-  onReceived = message => {
-    console.warn(message)
+  createPost = post => {
+    const { posts } = this.state
+    this.setState({
+      posts: [post, ...posts],
+    })
+  }
+
+  createComment = comment => {
+    const { posts } = this.state
+    const commentPostIndex = posts.findIndex(
+      elem => elem.id === comment.post_id
+    )
+    const newPost = posts[commentPostIndex]
+    posts[commentPostIndex] = {
+      ...newPost,
+      comments: [comment, ...newPost.comments],
+    }
+    this.setState({
+      posts,
+    })
+  }
+
+  onReceived = data => {
+    const { user } = this.props
+    if (data.payload.user.id === user.id) return
+    if (data.type === "ADD_POST") {
+      this.createPost(data.payload)
+    } else if (data.type === "ADD_COMMENT") {
+      this.createComment(data.payload)
+    }
   }
   render() {
     const { commentText, postText, posts } = this.state
@@ -118,7 +150,7 @@ export default class Timeline extends Component {
               style={{
                 height: 32,
               }}
-              src="https://cdn.iconscout.com/icon/free/png-128/avatar-375-456327.png"
+              src="https://image.ibb.co/mbvWaK/avatar.png"
             />
             <div
               style={{

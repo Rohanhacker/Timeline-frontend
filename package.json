@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack-dev-server --hot --mode development",
-    "build": "webpack --mode production"
+    "dev": "export NODE_ENV=development && webpack-dev-server --hot --mode development",
+    "prebuild:staging": "rimraf dist",
+    "build": "export NODE_ENV=production && webpack --mode production"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

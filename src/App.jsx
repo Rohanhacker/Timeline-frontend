@@ -3,7 +3,11 @@ import { hot } from "react-hot-loader"
 import axios from "axios"
 import Router from "./Router"
 
-axios.defaults.baseURL = "http://localhost:5000/"
+const env = process.env.APP_ENV
+axios.defaults.baseURL =
+  env === "production"
+    ? "https://fbrohan.herokuapp.com"
+    : "http://localhost:5000"
 axios.defaults.withCredentials = true
 axios.defaults.headers.common["Accept"] = "application/json"
 
