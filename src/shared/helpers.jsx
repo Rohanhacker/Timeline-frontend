@@ -22,3 +22,5 @@ export const pick = (obj, keys) => {
     .map(k => (k in obj ? { [k]: obj[k] } : {}))
     .reduce((res, o) => Object.assign(res, o), {})
 }
+
+export const deepClone = arr => JSON.parse(JSON.stringify(arr))

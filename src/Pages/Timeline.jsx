@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Button, message } from "antd"
 import { ActionCable, ActionCableProvider } from "react-actioncable-provider"
-import { getFormattedDate } from "../shared/helpers"
+import { getFormattedDate, deepClone } from "../shared/helpers"
 import {
   Container,
   Wall,
@@ -136,16 +136,17 @@ export default class Timeline extends Component {
 
   createComment = comment => {
     const { posts } = this.state
-    const commentPostIndex = posts.findIndex(
+    const clonePosts = deepClone(posts)
+    const commentPostIndex = clonePosts.findIndex(
       elem => elem.id === comment.post_id
     )
-    const newPost = posts[commentPostIndex]
-    posts[commentPostIndex] = {
+    const newPost = clonePosts[commentPostIndex]
+    clonePosts[commentPostIndex] = {
       ...newPost,
       comments: [comment, ...newPost.comments],
     }
     this.setState({
-      posts,
+      posts: clonePosts,
     })
   }
   // handle socket broadcast
